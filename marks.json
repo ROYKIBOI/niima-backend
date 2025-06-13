@@ -1,0 +1,51 @@
+[
+    {
+      "email": "royjoth1@gmail.com",
+      "module1": {
+        "mean": 70.82,
+        "grade": "CREDIT",
+        "subjects": [
+          { "title": "Financial Accounting", "marks": 81, "grade": "Distinction" },
+          { "title": "ICT Practical", "marks": 61, "grade": "Credit" },
+          { "title": "Business Plan", "marks": 87, "grade": "Distinction" },
+          { "title": "Human and Public Relations", "marks": 65, "grade": "Credit" },
+          { "title": "Sales and Marketing", "marks": 78, "grade": "Credit" },
+          { "title": "Business Finance", "marks": 54, "grade": "Pass" },
+          { "title": "Life Skills", "marks": 60, "grade": "Credit" },
+          { "title": "Entrepreneurship", "marks": 90, "grade": "Distinction" },
+          { "title": "Business Law", "marks": 53, "grade": "Pass" },
+          { "title": "Economics", "marks": 72, "grade": "Credit" },
+          { "title": "Communication Skills", "marks": 78, "grade": "Credit" }
+        ]
+      },
+      "module2": {
+        "mean": 72.0,
+        "grade": "CREDIT",
+        "subjects": [
+          { "title": "Information Communication Technology (ICT)", "marks": 67, "grade": "Credit" },
+          { "title": "Occupational Safety & Precautions", "marks": 75, "grade": "Credit" },
+          { "title": "Office Administration and Management", "marks": 87, "grade": "Distinction" },
+          { "title": "Marketing Management", "marks": 92, "grade": "Distinction" },
+          { "title": "Supply and Transport Management", "marks": 63, "grade": "Credit" },
+          { "title": "Quantitative Techniques", "marks": 54, "grade": "Pass" },
+          { "title": "Commercial and Administrative Law", "marks": 88, "grade": "Distinction" },
+          { "title": "Cost Accounting", "marks": 50, "grade": "Pass" }
+        ]
+      },
+      "module3": {
+        "mean": 71.63,
+        "grade": "CREDIT",
+        "subjects": [
+          { "title": "Organizational Theory and Behavior", "marks": 61, "grade": "Credit" },
+          { "title": "Labor and Industrial Relations", "marks": 58, "grade": "Pass" },
+          { "title": "Principles and Practice of Management", "marks": 82, "grade": "Distinction" },
+          { "title": "Human Resource Management", "marks": 62, "grade": "Credit" },
+          { "title": "Managerial Accounting", "marks": 71, "grade": "Credit" },
+          { "title": "Financial Management", "marks": 68, "grade": "Credit" },
+          { "title": "Research Methods(Project)", "marks": 84, "grade": "Distinction" },
+          { "title": "Trade Project", "marks": 87, "grade": "Distinction" }
+        ]
+      }
+    }
+  ]
+  

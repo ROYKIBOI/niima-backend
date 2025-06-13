@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard - Student Portal</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 min-h-screen">
+  <nav class="bg-white shadow p-4 flex justify-between items-center">
+    <h1 class="text-xl font-bold text-blue-600">Student Portal</h1>
+    <button onclick="logout()" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Logout</button>
+  </nav>
+
+  <main class="max-w-5xl mx-auto p-4">
+    <section class="bg-white shadow-md rounded-lg p-6 mb-6">
+      <div class="flex justify-between items-center">
+        <div>
+          <h2 class="text-2xl font-semibold" id="studentName">Welcome, Student</h2>
+          <p class="text-gray-600" id="studentEmail"></p>
+        </div>
+        <div>
+          <img id="profilePhoto" src="https://via.placeholder.com/100" alt="Profile" class="rounded-full border w-24 h-24 object-cover" />
+        </div>
+      </div>
+    </section>
+
+    <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <a href="profile.html" class="block bg-white p-5 rounded shadow hover:shadow-lg transition">
+        <h3 class="text-lg font-semibold mb-2">👤 My Profile</h3>
+        <p>Update personal details and view your student information.</p>
+      </a>
+
+      <a href="homework.html" class="block bg-white p-5 rounded shadow hover:shadow-lg transition">
+        <h3 class="text-lg font-semibold mb-2">📝 Homework</h3>
+        <p>View and submit assignments provided by instructors.</p>
+      </a>
+
+      <a href="exam.html" class="block bg-white p-5 rounded shadow hover:shadow-lg transition">
+        <h3 class="text-lg font-semibold mb-2">🧪 Online Exam</h3>
+        <p>Take online exams assigned by your departments.</p>
+      </a>
+
+      <a href="downloads.html" class="block bg-white p-5 rounded shadow hover:shadow-lg transition">
+        <h3 class="text-lg font-semibold mb-2">📥 Download Center</h3>
+        <p>Access and download graduation lists and course materials.</p>
+      </a>
+
+      <a href="results.html" class="block bg-white p-5 rounded shadow hover:shadow-lg transition">
+        <h3 class="text-lg font-semibold mb-2">📊 Examination Results</h3>
+        <p>Check performance and grade reports per module.</p>
+      </a>
+
+      <a href="notice.html" class="block bg-white p-5 rounded shadow hover:shadow-lg transition">
+        <h3 class="text-lg font-semibold mb-2">📢 Notice Board</h3>
+        <p>Stay updated with the latest announcements and news.</p>
+      </a>
+    </section>
+  </main>
+
+  <script>
+    const email = localStorage.getItem("email");
+    if (!email) {
+      window.location.href = "index.html";
+    }
+
+    function logout() {
+      localStorage.removeItem("token");
+      localStorage.removeItem("email");
+      window.location.href = "index.html";
+    }
+
+    fetch(`/api/user/${email}`)
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById("studentName").textContent = `Welcome, ${data.name}`;
+        document.getElementById("studentEmail").textContent = data.email;
+        if (data.photo) {
+          document.getElementById("profilePhoto").src = `uploads/${data.photo}`;
+        }
+      })
+      .catch(() => {
+        alert("Failed to load student data.");
+        window.location.href = "index.html";
+      });
+  </script>
+</body>
+</html>
+s

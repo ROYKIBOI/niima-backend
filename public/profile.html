@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Profile</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50 min-h-screen p-4">
+  <div class="max-w-xl mx-auto bg-white rounded-lg shadow p-6">
+    <h2 class="text-2xl font-bold mb-4 text-center">My Profile</h2>
+    <div class="flex flex-col items-center">
+      <img id="profileImage" src="https://via.placeholder.com/100" class="w-24 h-24 rounded-full border mb-4 object-cover" alt="Profile Photo">
+      <form id="uploadForm">
+        <input type="file" name="photo" id="photo" accept="image/*" required class="block mb-4">
+        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">Upload New Photo</button>
+      </form>
+      <p id="status" class="mt-4 text-sm text-center"></p>
+    </div>
+  </div>
+
+  <script>
+    const email = localStorage.getItem("email");
+    if (!email) window.location.href = "index.html";
+
+    fetch(`/api/user/${email}`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.photo) {
+          document.getElementById("profileImage").src = `uploads/${data.photo}`;
+        }
+      });
+
+    document.getElementById("uploadForm").addEventListener("submit", e => {
+      e.preventDefault();
+      const formData = new FormData();
+      formData.append("photo", document.getElementById("photo").files[0]);
+      formData.append("email", email);
+
+      fetch("/api/upload-photo", {
+        method: "POST",
+        body: formData
+      })
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById("status").textContent = data.message;
+          if (data.photo) {
+            document.getElementById("profileImage").src = `uploads/${data.photo}`;
+          }
+        })
+        .catch(() => {
+          document.getElementById("status").textContent = "Upload failed.";
+        });
+    });
+  </script>
+</body>
+</html>
