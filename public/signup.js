@@ -4,7 +4,7 @@ function signup(event) {
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
   
-    fetch("/api/signup", {
+    fetch("https://niima-backend.onrender.com/api/signup", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name, email, password })
