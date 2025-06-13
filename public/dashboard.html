@@ -70,7 +70,8 @@
       window.location.href = "index.html";
     }
 
-    fetch(`/api/user/${email}`)
+    // ✅ Update: Use full Render backend URL
+    fetch(`https://niima-backend.onrender.com/api/user/${email}`)
       .then(res => res.json())
       .then(data => {
         document.getElementById("studentName").textContent = `Welcome, ${data.name}`;
@@ -86,4 +87,3 @@
   </script>
 </body>
 </html>
-s
