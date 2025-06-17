@@ -16,6 +16,7 @@
     <section class="bg-white p-6 shadow rounded-lg mb-6">
       <h2 class="text-2xl font-semibold mb-2" id="studentName">Welcome, Student</h2>
       <p id="studentEmail" class="text-gray-600"></p>
+      <p id="studentClass" class="text-gray-500"></p>
     </section>
 
     <div id="modules"></div>
@@ -33,13 +34,14 @@
       window.location.href = "index.html";
     }
 
-    // ✅ Fetch from deployed backend
     fetch(`https://niima-backend.onrender.com/api/user/${email}`)
       .then(res => res.json())
       .then(data => {
-        console.log("🎯 Results data:", data); // Debug log
         document.getElementById("studentName").textContent = `Welcome, ${data.name}`;
         document.getElementById("studentEmail").textContent = data.email;
+        if (data.class) {
+          document.getElementById("studentClass").textContent = `Class: ${data.class}`;
+        }
 
         const container = document.getElementById("modules");
         ['module1', 'module2', 'module3'].forEach((mod, i) => {
