@@ -1,0 +1,20 @@
+<!-- public/admin.html -->
+<form onsubmit="adminLogin(event)">
+    <input type="text" id="adminUser" placeholder="Username" />
+    <input type="password" id="adminPass" placeholder="Password" />
+    <button type="submit">Login</button>
+  </form>
+  <script>
+    function adminLogin(e) {
+      e.preventDefault();
+      const user = document.getElementById("adminUser").value;
+      const pass = document.getElementById("adminPass").value;
+      if (user === "admin" && pass === "1234") {
+        localStorage.setItem("admin", true);
+        window.location.href = "admin-dashboard.html";
+      } else {
+        alert("Invalid admin credentials");
+      }
+    }
+  </script>
+  

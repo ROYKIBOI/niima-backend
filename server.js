@@ -13,7 +13,7 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(express.static("public"));
 
-// Load users and marks
+// Load users and marks from file
 let users = fs.existsSync("users.json") ? JSON.parse(fs.readFileSync("users.json")) : [];
 let marks = fs.existsSync("marks.json") ? JSON.parse(fs.readFileSync("marks.json")) : [];
 
@@ -23,6 +23,7 @@ app.post("/api/signup", (req, res) => {
   if (users.find(u => u.email === email)) {
     return res.status(400).json({ error: "User already exists" });
   }
+
   const hashedPassword = bcrypt.hashSync(password, 8);
   users.push({ name, email, password: hashedPassword, photo: "" });
   fs.writeFileSync("users.json", JSON.stringify(users, null, 2));
@@ -36,11 +37,12 @@ app.post("/api/login", (req, res) => {
   if (!user || !bcrypt.compareSync(password, user.password)) {
     return res.status(401).json({ error: "Invalid credentials" });
   }
+
   const token = jwt.sign({ email: user.email }, SECRET, { expiresIn: "1h" });
   res.json({ message: "Login successful", token });
 });
 
-// Fetch user & results
+// Get student details + marks
 app.get("/api/user/:email", (req, res) => {
   const email = req.params.email;
   const user = users.find(u => u.email === email);
@@ -56,6 +58,25 @@ app.get("/api/user/:email", (req, res) => {
     module2: userMarks?.module2 || null,
     module3: userMarks?.module3 || null
   });
+});
+
+// ✅ NEW: Admin saving or updating marks
+app.post("/api/admin/save-marks", (req, res) => {
+  const { email, marks: markObj } = req.body;
+
+  if (!email || !markObj) {
+    return res.status(400).json({ error: "Email and marks are required" });
+  }
+
+  const index = marks.findIndex(m => m.email === email);
+  if (index !== -1) {
+    marks[index] = { email, ...markObj }; // Update
+  } else {
+    marks.push({ email, ...markObj }); // New entry
+  }
+
+  fs.writeFileSync("marks.json", JSON.stringify(marks, null, 2));
+  res.json({ message: "Marks saved successfully" });
 });
 
 app.listen(PORT, () => {

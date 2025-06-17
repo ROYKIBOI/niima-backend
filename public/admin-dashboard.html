@@ -1,0 +1,21 @@
+<!-- public/admin-dashboard.html -->
+<form id="marksForm">
+    <input type="email" placeholder="Student Email" id="email" required />
+    <textarea placeholder="Paste JSON marks here" id="marks" required></textarea>
+    <button type="submit">Save Marks</button>
+  </form>
+  <script>
+    document.getElementById("marksForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = document.getElementById("email").value;
+      const marks = JSON.parse(document.getElementById("marks").value);
+      const res = await fetch("https://niima-backend.onrender.com/api/admin/save-marks", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, marks })
+      });
+      const data = await res.json();
+      alert(data.message || "Saved");
+    });
+  </script>
+  
