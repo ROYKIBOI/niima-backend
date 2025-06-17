@@ -1,29 +1,29 @@
 [
   {
-    "email": "johnmaina@gmail.com",
+    "email": "kimanijohn@gmail.com",
     "module1": {
-      "mean": 65.4,
+      "mean": 68.4,
       "grade": "CREDIT",
       "subjects": [
-        { "title": "Business Studies", "marks": 67, "grade": "Credit" },
-        { "title": "Mathematics", "marks": 62, "grade": "Credit" },
-        { "title": "Economics", "marks": 72, "grade": "Distinction" }
+        { "title": "Business Studies", "marks": 72, "grade": "Credit" },
+        { "title": "Mathematics", "marks": 66, "grade": "Credit" },
+        { "title": "Communication", "marks": 67, "grade": "Credit" }
       ]
     },
     "module2": {
-      "mean": 70.1,
+      "mean": 71.2,
       "grade": "CREDIT",
       "subjects": [
-        { "title": "Accounting", "marks": 68, "grade": "Credit" },
-        { "title": "ICT", "marks": 76, "grade": "Credit" }
+        { "title": "ICT", "marks": 75, "grade": "Credit" },
+        { "title": "Cost Accounting", "marks": 68, "grade": "Credit" }
       ]
     },
     "module3": {
-      "mean": 60.0,
-      "grade": "PASS",
+      "mean": 74.5,
+      "grade": "DISTINCTION",
       "subjects": [
-        { "title": "HR Management", "marks": 60, "grade": "Pass" },
-        { "title": "Final Project", "marks": 60, "grade": "Pass" }
+        { "title": "Final Project", "marks": 80, "grade": "Distinction" },
+        { "title": "Finance", "marks": 69, "grade": "Credit" }
       ]
     }
   }
