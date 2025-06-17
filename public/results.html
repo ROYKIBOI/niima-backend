@@ -1,83 +1,58 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Examination Results</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-</head>
-<body class="bg-gray-100 min-h-screen">
-  <nav class="bg-white shadow p-4 flex justify-between items-center">
-    <h1 class="text-xl font-bold text-blue-600">Student Portal</h1>
-    <button onclick="logout()" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Logout</button>
-  </nav>
+<script>
+  const email = localStorage.getItem("email");
+  if (!email) {
+    window.location.href = "index.html";
+  }
 
-  <main class="max-w-5xl mx-auto p-4">
-    <section class="bg-white p-6 shadow rounded-lg mb-6">
-      <h2 class="text-2xl font-semibold mb-2" id="studentName">Welcome, Student</h2>
-      <p id="studentEmail" class="text-gray-600"></p>
-    </section>
+  function logout() {
+    localStorage.removeItem("token");
+    localStorage.removeItem("email");
+    window.location.href = "index.html";
+  }
 
-    <div id="modules"></div>
-  </main>
+  fetch(`https://niima-backend.onrender.com/api/user/${email}`)
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById("studentName").textContent = `Welcome, ${data.name}`;
+      document.getElementById("studentEmail").textContent = data.email;
 
-  <script>
-    const email = localStorage.getItem("email");
-    if (!email) {
-      window.location.href = "index.html";
-    }
+      const container = document.getElementById("modules");
+      ['module1', 'module2', 'module3'].forEach((mod, i) => {
+        const m = data[mod];
+        if (!m) return;
 
-    function logout() {
-      localStorage.removeItem("token");
-      localStorage.removeItem("email");
-      window.location.href = "index.html";
-    }
+        const card = document.createElement("div");
+        card.className = "bg-white shadow-md rounded-lg p-5 mb-6";
 
-    fetch(`/api/user/${email}`)
-      .then(res => res.json())
-      .then(data => {
-        document.getElementById("studentName").textContent = `Welcome, ${data.name}`;
-        document.getElementById("studentEmail").textContent = data.email;
-
-        const container = document.getElementById("modules");
-        ['module1', 'module2', 'module3'].forEach((mod, i) => {
-          const m = data[mod];
-          if (!m) return;
-
-          const card = document.createElement("div");
-          card.className = "bg-white shadow-md rounded-lg p-5 mb-6";
-
-          card.innerHTML = `
-            <h3 class="text-xl font-semibold mb-3">Module ${i + 1}</h3>
-            <p class="mb-2">Mean Score: <strong>${m.mean}</strong></p>
-            <p class="mb-4">Overall Grade: <strong>${m.grade}</strong></p>
-            <table class="w-full text-left border">
-              <thead>
-                <tr class="bg-gray-200">
-                  <th class="py-2 px-3 border">Subject</th>
-                  <th class="py-2 px-3 border">Marks</th>
-                  <th class="py-2 px-3 border">Grade</th>
+        card.innerHTML = `
+          <h3 class="text-xl font-semibold mb-3">Module ${i + 1}</h3>
+          <p class="mb-2">Mean Score: <strong>${m.mean}</strong></p>
+          <p class="mb-4">Overall Grade: <strong>${m.grade}</strong></p>
+          <table class="w-full text-left border">
+            <thead>
+              <tr class="bg-gray-200">
+                <th class="py-2 px-3 border">Subject</th>
+                <th class="py-2 px-3 border">Marks</th>
+                <th class="py-2 px-3 border">Grade</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${m.subjects.map(sub => `
+                <tr>
+                  <td class="py-2 px-3 border">${sub.title}</td>
+                  <td class="py-2 px-3 border">${sub.marks}</td>
+                  <td class="py-2 px-3 border">${sub.grade}</td>
                 </tr>
-              </thead>
-              <tbody>
-                ${m.subjects.map(sub => `
-                  <tr>
-                    <td class="py-2 px-3 border">${sub.title}</td>
-                    <td class="py-2 px-3 border">${sub.marks}</td>
-                    <td class="py-2 px-3 border">${sub.grade}</td>
-                  </tr>
-                `).join("")}
-              </tbody>
-            </table>
-          `;
+              `).join("")}
+            </tbody>
+          </table>
+        `;
 
-          container.appendChild(card);
-        });
-      })
-      .catch(() => {
-        alert("Failed to load student results.");
-        window.location.href = "index.html";
+        container.appendChild(card);
       });
-  </script>
-</body>
-</html>
+    })
+    .catch(() => {
+      alert("Failed to load student results.");
+      window.location.href = "index.html";
+    });
+</script>
