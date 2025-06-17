@@ -1,27 +1,8 @@
 [
   {
-    "name": "",
-    "email": "",
-    "password": "$2b$08$cn7N2SnM3Zi5k3hzipoF4.b0ioi8c5FAWUv7aqXkPJgEMPU5UgJFW"
-  },
-  {
-    "name": "Henry Kimani ",
-    "email": "royjothams@gmail.com",
-    "password": "$2b$08$Ny2.kTnjnQ9SzKlUVpNMI.BEAlne38qKS6tjOTetSQKECPyrsPXwS"
-  },
-  {
-    "name": "",
-    "email": "royjothammm@gmail.com",
-    "password": "$2b$08$Joi8DPCWzFH1Rgnax6Yv0ecs70oyu7GtipfvCtMl0QfhK/WqzMFAC"
-  },
-  {
-    "name": "",
-    "email": "royjoth@gmail.com",
-    "password": "$2b$08$3aQXiBlLW694xWIrkdqTO.VgXpUq.bOUHF0hBugzAA1jt1eGFNlam"
-  },
-  {
-    "name": "",
-    "email": "royjoth1@gmail.com",
-    "password": "$2b$08$6susEfV0VmfmOYFmr9tbjejxwGj0XpRDJpkEUh4i/wxuiLLhX9Y3S"
+    "name": "John Maina",
+    "email": "johnmaina@gmail.com",
+    "password": "$2a$08$W1NFRmS6V3AvWgmlfbZwJ.Ij0yRZrZqby0n7MGeuHJKQX9Hi5w7jy",
+    "photo": ""
   }
 ]
