@@ -1,9 +1,8 @@
 [
-    {
-      "name": "kibooi",
-      "email": "kibooi@gmail.com",
-      "password": "$2a$08$eejHthOBaYzsknzVIZ.BUe20DAvbbCM6r1GqvfH1pv9AUKZqCu3bW"
-
-    }
-  ]
-  
+  {
+    "name": "Roy Jothams",
+    "email": "royjothams@gmail.com",
+    "password": "$2a$08$VhPCXEyA1Xt4ZKCdb8BR2e6Ik5qkPV9Vzn7fCF13f.lYHBNh/YY3K", 
+    "photo": ""
+  }
+]
