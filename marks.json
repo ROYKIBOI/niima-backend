@@ -1,34 +1,19 @@
 [
   {
-    "email": "harrythuku@gmail.com",
+    "admNumber": "ADM12345",
     "module1": {
       "mean": 75.2,
       "grade": "DISTINCTION",
       "subjects": [
         { "title": "Business Mathematics", "marks": 85, "grade": "Distinction" },
-        { "title": "Introduction to ICT", "marks": 72, "grade": "Credit" },
-        { "title": "Principles of Marketing", "marks": 79, "grade": "Credit" },
-        { "title": "Business Communication", "marks": 74, "grade": "Credit" }
+        { "title": "Introduction to ICT", "marks": 72, "grade": "Credit" }
       ]
     },
     "module2": {
       "mean": 69.8,
       "grade": "CREDIT",
       "subjects": [
-        { "title": "Financial Accounting", "marks": 67, "grade": "Credit" },
-        { "title": "Business Law", "marks": 73, "grade": "Credit" },
-        { "title": "Human Resource Management", "marks": 78, "grade": "Credit" },
-        { "title": "Entrepreneurship", "marks": 61, "grade": "Credit" }
-      ]
-    },
-    "module3": {
-      "mean": 71.0,
-      "grade": "CREDIT",
-      "subjects": [
-        { "title": "Project Management", "marks": 80, "grade": "Distinction" },
-        { "title": "Managerial Accounting", "marks": 70, "grade": "Credit" },
-        { "title": "Strategic Planning", "marks": 63, "grade": "Credit" },
-        { "title": "Organization Behavior", "marks": 71, "grade": "Credit" }
+        { "title": "Financial Accounting", "marks": 67, "grade": "Credit" }
       ]
     }
   }

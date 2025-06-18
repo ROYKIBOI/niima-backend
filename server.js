@@ -9,16 +9,13 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 const SECRET = process.env.SECRET || "secret_key";
 
-// Allow CORS from Netlify (replace with your actual Netlify URL)
-app.use(cors({ origin: 'https://your-netlify-site.netlify.app' })); // Update this
+app.use(cors({ origin: '*' })); // allow Netlify access
 app.use(bodyParser.json());
 app.use(express.static("public"));
 
-// Load users and marks from file
 let users = fs.existsSync("users.json") ? JSON.parse(fs.readFileSync("users.json")) : [];
 let marks = fs.existsSync("marks.json") ? JSON.parse(fs.readFileSync("marks.json")) : [];
 
-// Authentication middleware
 const authenticateToken = (req, res, next) => {
   const token = req.headers["authorization"]?.split(" ")[1];
   if (!token) return res.status(401).json({ error: "Access denied" });
@@ -55,7 +52,7 @@ app.post("/api/login", (req, res) => {
   res.json({ message: "Login successful", token });
 });
 
-// Get student details + marks
+// Get student + results
 app.get("/api/user/:admNumber", authenticateToken, (req, res) => {
   const admNumber = req.params.admNumber;
   if (req.user.admNumber !== admNumber) {
@@ -76,7 +73,7 @@ app.get("/api/user/:admNumber", authenticateToken, (req, res) => {
   });
 });
 
-// Admin saving or updating marks
+// Admin: Add/Update marks
 app.post("/api/admin/save-marks", (req, res) => {
   const { admNumber, marks: markObj } = req.body;
 
@@ -86,9 +83,9 @@ app.post("/api/admin/save-marks", (req, res) => {
 
   const index = marks.findIndex(m => m.admNumber === admNumber);
   if (index !== -1) {
-    marks[index] = { admNumber, ...markObj }; // Update
+    marks[index] = { admNumber, ...markObj };
   } else {
-    marks.push({ admNumber, ...markObj }); // New entry
+    marks.push({ admNumber, ...markObj });
   }
 
   fs.writeFileSync("marks.json", JSON.stringify(marks, null, 2));

@@ -1,28 +1,30 @@
 function signup(event) {
   event.preventDefault();
-  const name = document.getElementById("name").value;
-  const email = document.getElementById("email").value;
+  const name = document.getElementById("name").value.trim();
+  const admNumber = document.getElementById("admNumber").value.trim();
   const password = document.getElementById("password").value;
+  const messageEl = document.getElementById("message");
 
   fetch("https://niima-backend.onrender.com/api/signup", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ name, email, password })
+    body: JSON.stringify({ name, admNumber, password })
   })
     .then(res => res.json())
     .then(data => {
       if (data.message) {
-        document.getElementById("message").classList.remove("text-red-500");
-        document.getElementById("message").classList.add("text-green-600");
-        document.getElementById("message").innerText = data.message + " Redirecting...";
+        messageEl.innerText = data.message;
+        messageEl.className = "text-green-600";
         setTimeout(() => {
           window.location.href = "index.html";
-        }, 2000);
+        }, 1500);
       } else {
-        document.getElementById("message").innerText = data.error || "Signup failed.";
+        messageEl.innerText = data.error || "Signup failed.";
+        messageEl.className = "text-red-500";
       }
     })
     .catch(() => {
-      document.getElementById("message").innerText = "Something went wrong.";
+      messageEl.innerText = "Something went wrong.";
+      messageEl.className = "text-red-500";
     });
 }
