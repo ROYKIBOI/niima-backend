@@ -61,6 +61,7 @@
   <script>
     const email = localStorage.getItem("email");
     const token = localStorage.getItem("token");
+    console.log("Email:", email, "Token:", token);
     if (!email || !token) {
       window.location.href = "index.html";
     }
@@ -76,8 +77,13 @@
         "Authorization": `Bearer ${token}`
       }
     })
-      .then(res => res.json())
+      .then(res => {
+        console.log("Response Status:", res.status);
+        if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
+        return res.json();
+      })
       .then(data => {
+        console.log("Response Data:", data);
         document.getElementById("studentName").textContent = `Welcome, ${data.name || "Student"}`;
         document.getElementById("studentEmail").textContent = data.email;
         if (data.photo) {
@@ -126,7 +132,8 @@
           container.appendChild(card);
         });
       })
-      .catch(() => {
+      .catch(err => {
+        console.error("Fetch Error:", err);
         alert("Failed to load student data or results.");
         window.location.href = "index.html";
       });
