@@ -9,7 +9,7 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 const SECRET = process.env.SECRET || "secret_key";
 
-app.use(cors({ origin: '*' })); // allow Netlify access
+app.use(cors({ origin: '*' }));
 app.use(bodyParser.json());
 app.use(express.static("public"));
 
@@ -52,7 +52,7 @@ app.post("/api/login", (req, res) => {
   res.json({ message: "Login successful", token });
 });
 
-// Get student + results
+// Fetch user data and marks
 app.get("/api/user/:admNumber", authenticateToken, (req, res) => {
   const admNumber = req.params.admNumber;
   if (req.user.admNumber !== admNumber) {
@@ -67,13 +67,14 @@ app.get("/api/user/:admNumber", authenticateToken, (req, res) => {
     name: user.name,
     admNumber: user.admNumber,
     photo: user.photo || "",
+    course: userMarks?.course || "Diploma in Business Management",
     module1: userMarks?.module1 || null,
     module2: userMarks?.module2 || null,
     module3: userMarks?.module3 || null
   });
 });
 
-// Admin: Add/Update marks
+// Admin save/update marks
 app.post("/api/admin/save-marks", (req, res) => {
   const { admNumber, marks: markObj } = req.body;
 

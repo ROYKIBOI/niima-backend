@@ -19,7 +19,7 @@
         <div>
           <p class="text-lg"><strong>Name:</strong> <span id="studentName">Loading...</span></p>
           <p class="text-lg"><strong>ADM Number:</strong> <span id="studentAdmNumber">Loading...</span></p>
-          <p class="text-lg"><strong>Status:</strong> Active</p>
+          <p class="text-lg"><strong>Course:</strong> <span id="studentCourse">Loading...</span></p>
         </div>
         <div>
           <img id="profilePhoto" src="https://via.placeholder.com/100" alt="Profile" class="rounded-full border w-24 h-24 object-cover" />
@@ -67,6 +67,7 @@
 
         document.getElementById("studentName").textContent = data.name || "Unknown";
         document.getElementById("studentAdmNumber").textContent = data.admNumber || "Unknown";
+        document.getElementById("studentCourse").textContent = data.course || "Not Available";
 
         const container = document.getElementById("modules");
         const allModules = [];
