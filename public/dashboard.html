@@ -62,7 +62,7 @@
   <script>
     const email = localStorage.getItem("email");
     const token = localStorage.getItem("token");
-    console.log("Email:", email, "Token:", token);
+    console.log("Initial Email:", email, "Initial Token:", token);
     if (!email || !token) {
       window.location.href = "index.html";
     }
@@ -73,73 +73,80 @@
       window.location.href = "index.html";
     }
 
-    fetch(`https://niima-backend.onrender.com/api/user/${email}`, {
+    fetch(`https://niima-backend.onrender.com/api/user/${encodeURIComponent(email)}`, {
       headers: {
-        "Authorization": `Bearer ${token}`
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json"
       }
     })
       .then(res => {
-        console.log("Response Status:", res.status);
+        console.log("Fetch Response Status:", res.status, "OK:", res.ok, "Status Text:", res.statusText);
         if (!res.ok) {
-          throw new Error(`HTTP error! Status: ${res.status}`);
+          throw new Error(`HTTP error! Status: ${res.status} - ${res.statusText}`);
         }
-        return res.json();
+        return res.text();
       })
-      .then(data => {
-        console.log("Response Data:", data);
-        document.getElementById("studentName").textContent = `Welcome, ${data.name || "Student"}`;
-        document.getElementById("studentEmail").textContent = data.email;
-        if (data.photo) {
-          document.getElementById("profilePhoto").src = `uploads/${data.photo}`;
-        }
+      .then(text => {
+        console.log("Raw Response:", text);
+        try {
+          const data = JSON.parse(text);
+          console.log("Parsed Data:", data);
+          document.getElementById("studentName").textContent = `Welcome, ${data.name || "Student"}`;
+          document.getElementById("studentEmail").textContent = data.email;
+          if (data.photo) {
+            document.getElementById("profilePhoto").src = `uploads/${data.photo}`;
+          }
 
-        const container = document.getElementById("modules");
+          const container = document.getElementById("modules");
 
-        if (!data.module1 && !data.module2 && !data.module3) {
-          container.innerHTML = `
-            <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded">
-              No examination results found for your account.
-            </div>`;
-          return;
-        }
+          if (!data.module1 && !data.module2 && !data.module3) {
+            container.innerHTML = `
+              <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded">
+                No examination results found for your account.
+              </div>`;
+            return;
+          }
 
-        ['module1', 'module2', 'module3'].forEach((mod, i) => {
-          const m = data[mod];
-          if (!m) return;
+          ['module1', 'module2', 'module3'].forEach((mod, i) => {
+            const m = data[mod];
+            if (!m) return;
 
-          const card = document.createElement("div");
-          card.className = "bg-white shadow-md rounded-lg p-5 mb-6";
-          card.innerHTML = `
-            <h3 class="text-xl font-semibold mb-3">Module ${i + 1}</h3>
-            <p class="mb-2">Mean Score: <strong>${m.mean}</strong></p>
-            <p class="mb-4">Overall Grade: <strong>${m.grade}</strong></p>
-            <table class="w-full text-left border">
-              <thead>
-                <tr class="bg-gray-200">
-                  <th class="py-2 px-3 border">Subject</th>
-                  <th class="py-2 px-3 border">Marks</th>
-                  <th class="py-2 px-3 border">Grade</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${m.subjects.map(sub => `
-                  <tr>
-                    <td class="py-2 px-3 border">${sub.title}</td>
-                    <td class="py-2 px-3 border">${sub.marks}</td>
-                    <td class="py-2 px-3 border">${sub.grade}</td>
+            const card = document.createElement("div");
+            card.className = "bg-white shadow-md rounded-lg p-5 mb-6";
+            card.innerHTML = `
+              <h3 class="text-xl font-semibold mb-3">Module ${i + 1}</h3>
+              <p class="mb-2">Mean Score: <strong>${m.mean}</strong></p>
+              <p class="mb-4">Overall Grade: <strong>${m.grade}</strong></p>
+              <table class="w-full text-left border">
+                <thead>
+                  <tr class="bg-gray-200">
+                    <th class="py-2 px-3 border">Subject</th>
+                    <th class="py-2 px-3 border">Marks</th>
+                    <th class="py-2 px-3 border">Grade</th>
                   </tr>
-                `).join("")}
-              </tbody>
-            </table>
-          `;
-          container.appendChild(card);
-        });
+                </thead>
+                <tbody>
+                  ${m.subjects.map(sub => `
+                    <tr>
+                      <td class="py-2 px-3 border">${sub.title}</td>
+                      <td class="py-2 px-3 border">${sub.marks}</td>
+                      <td class="py-2 px-3 border">${sub.grade}</td>
+                    </tr>
+                  `).join("")}
+                </tbody>
+              </table>
+            `;
+            container.appendChild(card);
+          });
+        } catch (e) {
+          console.error("JSON Parse Error:", e);
+          throw new Error("Invalid JSON response");
+        }
       })
       .catch(err => {
-        console.error("Fetch Error:", err);
+        console.error("Fetch Error:", err.message);
         document.getElementById("errorMessage").textContent = `Error: ${err.message}`;
         document.getElementById("errorMessage").classList.remove("hidden");
-        // Delay redirect to allow error visibility
         setTimeout(() => {
           alert("Failed to load student data or results.");
           window.location.href = "index.html";

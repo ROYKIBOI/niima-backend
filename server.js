@@ -6,10 +6,11 @@ const jwt = require("jsonwebtoken");
 const fs = require("fs");
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3001; // Use Render's PORT or fallback to 3001
 const SECRET = process.env.SECRET || "secret_key";
 
-app.use(cors());
+// Allow CORS from Netlify (replace with your Netlify URL)
+app.use(cors({ origin: 'https://your-netlify-site.netlify.app' })); // Update this with your actual Netlify URL, or use '*' for testing
 app.use(bodyParser.json());
 app.use(express.static("public"));
 
