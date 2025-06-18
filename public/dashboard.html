@@ -55,6 +55,7 @@
     <section class="bg-white shadow-md rounded-lg p-6" id="resultsSection">
       <h2 class="text-2xl font-semibold mb-4">Examination Results</h2>
       <div id="modules"></div>
+      <div id="errorMessage" class="text-red-500 mt-2 hidden"></div>
     </section>
   </main>
 
@@ -79,7 +80,9 @@
     })
       .then(res => {
         console.log("Response Status:", res.status);
-        if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
+        if (!res.ok) {
+          throw new Error(`HTTP error! Status: ${res.status}`);
+        }
         return res.json();
       })
       .then(data => {
@@ -134,8 +137,13 @@
       })
       .catch(err => {
         console.error("Fetch Error:", err);
-        alert("Failed to load student data or results.");
-        window.location.href = "index.html";
+        document.getElementById("errorMessage").textContent = `Error: ${err.message}`;
+        document.getElementById("errorMessage").classList.remove("hidden");
+        // Delay redirect to allow error visibility
+        setTimeout(() => {
+          alert("Failed to load student data or results.");
+          window.location.href = "index.html";
+        }, 2000);
       });
   </script>
 </body>
