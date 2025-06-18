@@ -12,7 +12,7 @@ function login() {
       if (data.token) {
         localStorage.setItem("token", data.token);
         localStorage.setItem("email", email);
-        window.location.href = "dashboard.html";
+        window.location.href = "dashboard.html"; // Redirect to dashboard
       } else {
         document.getElementById("message").innerText = data.error || "Login failed.";
       }

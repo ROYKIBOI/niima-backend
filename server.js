@@ -17,6 +17,18 @@ app.use(express.static("public"));
 let users = fs.existsSync("users.json") ? JSON.parse(fs.readFileSync("users.json")) : [];
 let marks = fs.existsSync("marks.json") ? JSON.parse(fs.readFileSync("marks.json")) : [];
 
+// Authentication middleware
+const authenticateToken = (req, res, next) => {
+  const token = req.headers["authorization"]?.split(" ")[1];
+  if (!token) return res.status(401).json({ error: "Access denied" });
+
+  jwt.verify(token, SECRET, (err, decoded) => {
+    if (err) return res.status(403).json({ error: "Invalid token" });
+    req.user = decoded;
+    next();
+  });
+};
+
 // Signup
 app.post("/api/signup", (req, res) => {
   const { name, email, password } = req.body;
@@ -43,8 +55,11 @@ app.post("/api/login", (req, res) => {
 });
 
 // Get student details + marks
-app.get("/api/user/:email", (req, res) => {
+app.get("/api/user/:email", authenticateToken, (req, res) => {
   const email = req.params.email;
+  if (req.user.email !== email) {
+    return res.status(403).json({ error: "Unauthorized access" });
+  }
   const user = users.find(u => u.email === email);
   const userMarks = marks.find(m => m.email === email);
 
@@ -60,7 +75,7 @@ app.get("/api/user/:email", (req, res) => {
   });
 });
 
-// ✅ NEW: Admin saving or updating marks
+// Admin saving or updating marks
 app.post("/api/admin/save-marks", (req, res) => {
   const { email, marks: markObj } = req.body;
 

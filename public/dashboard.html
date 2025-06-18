@@ -25,7 +25,7 @@
       </div>
     </section>
 
-    <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
       <a href="profile.html" class="block bg-white p-5 rounded shadow hover:shadow-lg transition">
         <h3 class="text-lg font-semibold mb-2">👤 My Profile</h3>
         <p>Update personal details and view your student information.</p>
@@ -46,21 +46,22 @@
         <p>Access and download graduation lists and course materials.</p>
       </a>
 
-      <a href="results.html" class="block bg-white p-5 rounded shadow hover:shadow-lg transition">
-        <h3 class="text-lg font-semibold mb-2">📊 Examination Results</h3>
-        <p>Check performance and grade reports per module.</p>
-      </a>
-
       <a href="notice.html" class="block bg-white p-5 rounded shadow hover:shadow-lg transition">
         <h3 class="text-lg font-semibold mb-2">📢 Notice Board</h3>
         <p>Stay updated with the latest announcements and news.</p>
       </a>
     </section>
+
+    <section class="bg-white shadow-md rounded-lg p-6" id="resultsSection">
+      <h2 class="text-2xl font-semibold mb-4">Examination Results</h2>
+      <div id="modules"></div>
+    </section>
   </main>
 
   <script>
     const email = localStorage.getItem("email");
-    if (!email) {
+    const token = localStorage.getItem("token");
+    if (!email || !token) {
       window.location.href = "index.html";
     }
 
@@ -70,18 +71,63 @@
       window.location.href = "index.html";
     }
 
-    // ✅ Update: Use full Render backend URL
-    fetch(`https://niima-backend.onrender.com/api/user/${email}`)
+    fetch(`https://niima-backend.onrender.com/api/user/${email}`, {
+      headers: {
+        "Authorization": `Bearer ${token}`
+      }
+    })
       .then(res => res.json())
       .then(data => {
-        document.getElementById("studentName").textContent = `Welcome, ${data.name}`;
+        document.getElementById("studentName").textContent = `Welcome, ${data.name || "Student"}`;
         document.getElementById("studentEmail").textContent = data.email;
         if (data.photo) {
           document.getElementById("profilePhoto").src = `uploads/${data.photo}`;
         }
+
+        const container = document.getElementById("modules");
+
+        if (!data.module1 && !data.module2 && !data.module3) {
+          container.innerHTML = `
+            <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded">
+              No examination results found for your account.
+            </div>`;
+          return;
+        }
+
+        ['module1', 'module2', 'module3'].forEach((mod, i) => {
+          const m = data[mod];
+          if (!m) return;
+
+          const card = document.createElement("div");
+          card.className = "bg-white shadow-md rounded-lg p-5 mb-6";
+          card.innerHTML = `
+            <h3 class="text-xl font-semibold mb-3">Module ${i + 1}</h3>
+            <p class="mb-2">Mean Score: <strong>${m.mean}</strong></p>
+            <p class="mb-4">Overall Grade: <strong>${m.grade}</strong></p>
+            <table class="w-full text-left border">
+              <thead>
+                <tr class="bg-gray-200">
+                  <th class="py-2 px-3 border">Subject</th>
+                  <th class="py-2 px-3 border">Marks</th>
+                  <th class="py-2 px-3 border">Grade</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${m.subjects.map(sub => `
+                  <tr>
+                    <td class="py-2 px-3 border">${sub.title}</td>
+                    <td class="py-2 px-3 border">${sub.marks}</td>
+                    <td class="py-2 px-3 border">${sub.grade}</td>
+                  </tr>
+                `).join("")}
+              </tbody>
+            </table>
+          `;
+          container.appendChild(card);
+        });
       })
       .catch(() => {
-        alert("Failed to load student data.");
+        alert("Failed to load student data or results.");
         window.location.href = "index.html";
       });
   </script>
