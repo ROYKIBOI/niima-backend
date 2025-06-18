@@ -1,19 +1,49 @@
 [
   {
-    "admNumber": "ADM123455",
+    "admNumber": "NC/2022-2452",
     "module1": {
-      "mean": 75.2,
-      "grade": "DISTINCTION",
+      "mean": 63.27,
+      "grade": "CREDIT",
       "subjects": [
-        { "title": "Business Mathematics", "marks": 85, "grade": "Distinction" },
-        { "title": "Introduction to ICT", "marks": 72, "grade": "Credit" }
+        { "title": "Financial Accounting", "marks": 50, "grade": "Pass" },
+        { "title": "ICT Practical", "marks": 43, "grade": "Pass" },
+        { "title": "Business Plan", "marks": 60, "grade": "Credit" },
+        { "title": "Human and Public Relations", "marks": 73, "grade": "Credit" },
+        { "title": "Sales and Marketing", "marks": 70, "grade": "Credit" },
+        { "title": "Business Finance", "marks": 60, "grade": "Credit" },
+        { "title": "Life Skills", "marks": 76, "grade": "Credit" },
+        { "title": "Entrepreneurship", "marks": 52, "grade": "Pass" },
+        { "title": "Business Law", "marks": 58, "grade": "Pass" },
+        { "title": "Economics", "marks": 68, "grade": "Credit" },
+        { "title": "Communication Skills", "marks": 68, "grade": "Credit" }
       ]
     },
     "module2": {
-      "mean": 69.8,
-      "grade": "CREDIT",
+      "mean": 51.63,
+      "grade": "PASS",
       "subjects": [
-        { "title": "Financial Accounting", "marks": 67, "grade": "Credit" }
+        { "title": "Information Communication Technology (ICT)", "marks": 55, "grade": "Credit" },
+        { "title": "Occupational Safety & Precautions", "marks": 47, "grade": "Pass" },
+        { "title": "Office Administration and Management", "marks": 57, "grade": "Credit" },
+        { "title": "Marketing Management", "marks": 70, "grade": "Credit" },
+        { "title": "Supply and Transport Management", "marks": 60, "grade": "Credit" },
+        { "title": "Quantitative Techniques", "marks": 53, "grade": "Pass" },
+        { "title": "Commercial and Administrative Law", "marks": 58, "grade": "Credit" },
+        { "title": "Cost Accounting", "marks": 45, "grade": "Pass" }
+      ]
+    },
+    "module3": {
+      "mean": 65.63,
+      "grade": "PASS",
+      "subjects": [
+        { "title": "Organization Theory and Behavior", "marks": 61, "grade": "Credit" },
+        { "title": "Labor and Industrial Relations", "marks": 58, "grade": "Pass" },
+        { "title": "Principles and Practice of Management", "marks": 70, "grade": "Credit" },
+        { "title": "Human Resource Management", "marks": 73, "grade": "Credit" },
+        { "title": "Managerial Accounting", "marks": 60, "grade": "Credit" },
+        { "title": "Financial Management", "marks": 65, "grade": "Pass" },
+        { "title": "Research Methods (Project)", "marks": 70, "grade": "Credit" },
+        { "title": "Trade Project", "marks": 68, "grade": "Pass" }
       ]
     }
   }
