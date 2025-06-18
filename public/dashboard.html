@@ -14,10 +14,12 @@
 
   <main class="max-w-5xl mx-auto p-4">
     <section class="bg-white shadow-md rounded-lg p-6 mb-6">
+      <h2 class="text-2xl font-semibold mb-4">Profile</h2>
       <div class="flex justify-between items-center">
         <div>
-          <h2 class="text-2xl font-semibold" id="studentName">Welcome, Student</h2>
-          <p class="text-gray-600" id="studentEmail"></p>
+          <p class="text-lg"><strong>Name:</strong> <span id="studentName">Loading...</span></p>
+          <p class="text-lg"><strong>ADM Number:</strong> <span id="studentAdmNumber">Loading...</span></p>
+          <p class="text-lg"><strong>Status:</strong> Active</p>
         </div>
         <div>
           <img id="profilePhoto" src="https://via.placeholder.com/100" alt="Profile" class="rounded-full border w-24 h-24 object-cover" />
@@ -25,98 +27,65 @@
       </div>
     </section>
 
-    <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
-      <a href="profile.html" class="block bg-white p-5 rounded shadow hover:shadow-lg transition">
-        <h3 class="text-lg font-semibold mb-2">👤 My Profile</h3>
-        <p>Update personal details and view your student information.</p>
-      </a>
-
-      <a href="homework.html" class="block bg-white p-5 rounded shadow hover:shadow-lg transition">
-        <h3 class="text-lg font-semibold mb-2">📝 Homework</h3>
-        <p>View and submit assignments provided by instructors.</p>
-      </a>
-
-      <a href="exam.html" class="block bg-white p-5 rounded shadow hover:shadow-lg transition">
-        <h3 class="text-lg font-semibold mb-2">🧪 Online Exam</h3>
-        <p>Take online exams assigned by your departments.</p>
-      </a>
-
-      <a href="downloads.html" class="block bg-white p-5 rounded shadow hover:shadow-lg transition">
-        <h3 class="text-lg font-semibold mb-2">📥 Download Center</h3>
-        <p>Access and download graduation lists and course materials.</p>
-      </a>
-
-      <a href="notice.html" class="block bg-white p-5 rounded shadow hover:shadow-lg transition">
-        <h3 class="text-lg font-semibold mb-2">📢 Notice Board</h3>
-        <p>Stay updated with the latest announcements and news.</p>
-      </a>
-    </section>
-
-    <section class="bg-white shadow-md rounded-lg p-6" id="resultsSection">
+    <section class="bg-white shadow-md rounded-lg p-6 mb-6" id="resultsSection">
       <h2 class="text-2xl font-semibold mb-4">Examination Results</h2>
       <div id="modules"></div>
-      <div id="errorMessage" class="text-red-500 mt-2 hidden"></div>
+      <div id="errorMessage" class="text-red-500 mt-4 text-center hidden"></div>
     </section>
   </main>
 
   <script>
-    const email = localStorage.getItem("email");
+    const admNumber = localStorage.getItem("admNumber");
     const token = localStorage.getItem("token");
-    console.log("Initial Email:", email, "Initial Token:", token);
-    if (!email || !token) {
+
+    if (!admNumber || !token) {
       window.location.href = "index.html";
     }
 
     function logout() {
       localStorage.removeItem("token");
-      localStorage.removeItem("email");
+      localStorage.removeItem("admNumber");
       window.location.href = "index.html";
     }
 
-    fetch(`https://niima-backend.onrender.com/api/user/${encodeURIComponent(email)}`, {
-      headers: {
-        "Authorization": `Bearer ${token}`,
-        "Content-Type": "application/json"
-      }
-    })
-      .then(res => {
-        console.log("Fetch Response Status:", res.status, "OK:", res.ok, "Status Text:", res.statusText);
+    async function fetchStudentData() {
+      try {
+        const res = await fetch(`https://niima-backend.onrender.com/api/user/${encodeURIComponent(admNumber)}`, {
+          method: "GET",
+          headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json"
+          }
+        });
+
         if (!res.ok) {
-          throw new Error(`HTTP error! Status: ${res.status} - ${res.statusText}`);
+          if (res.status === 403) throw new Error("Unauthorized. Your session has expired.");
+          throw new Error(`HTTP ${res.status}: ${res.statusText}`);
         }
-        return res.text();
-      })
-      .then(text => {
-        console.log("Raw Response:", text);
-        try {
-          const data = JSON.parse(text);
-          console.log("Parsed Data:", data);
-          document.getElementById("studentName").textContent = `Welcome, ${data.name || "Student"}`;
-          document.getElementById("studentEmail").textContent = data.email;
-          if (data.photo) {
-            document.getElementById("profilePhoto").src = `uploads/${data.photo}`;
-          }
 
-          const container = document.getElementById("modules");
+        const data = await res.json();
 
-          if (!data.module1 && !data.module2 && !data.module3) {
-            container.innerHTML = `
-              <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded">
-                No examination results found for your account.
-              </div>`;
-            return;
-          }
+        document.getElementById("studentName").textContent = data.name || "Unknown";
+        document.getElementById("studentAdmNumber").textContent = data.admNumber || "Unknown";
 
-          ['module1', 'module2', 'module3'].forEach((mod, i) => {
-            const m = data[mod];
-            if (!m) return;
+        const container = document.getElementById("modules");
+        const allModules = [];
 
-            const card = document.createElement("div");
-            card.className = "bg-white shadow-md rounded-lg p-5 mb-6";
-            card.innerHTML = `
-              <h3 class="text-xl font-semibold mb-3">Module ${i + 1}</h3>
-              <p class="mb-2">Mean Score: <strong>${m.mean}</strong></p>
-              <p class="mb-4">Overall Grade: <strong>${m.grade}</strong></p>
+        if (data.module1) allModules.push({ ...data.module1, number: 1 });
+        if (data.module2) allModules.push({ ...data.module2, number: 2 });
+        if (data.module3) allModules.push({ ...data.module3, number: 3 });
+
+        if (allModules.length === 0) {
+          container.innerHTML = `
+            <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded">
+              No examination results found.
+            </div>`;
+        } else {
+          container.innerHTML = allModules.map(unit => `
+            <div class="bg-white shadow-md rounded-lg p-5 mb-6">
+              <h3 class="text-xl font-semibold mb-3">Module ${unit.number}</h3>
+              <p class="mb-2">Mean Score: <strong>${unit.mean}</strong></p>
+              <p class="mb-4">Overall Grade: <strong>${unit.grade}</strong></p>
               <table class="w-full text-left border">
                 <thead>
                   <tr class="bg-gray-200">
@@ -126,7 +95,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  ${m.subjects.map(sub => `
+                  ${unit.subjects.map(sub => `
                     <tr>
                       <td class="py-2 px-3 border">${sub.title}</td>
                       <td class="py-2 px-3 border">${sub.marks}</td>
@@ -135,23 +104,23 @@
                   `).join("")}
                 </tbody>
               </table>
-            `;
-            container.appendChild(card);
-          });
-        } catch (e) {
-          console.error("JSON Parse Error:", e);
-          throw new Error("Invalid JSON response");
+            </div>
+          `).join("");
         }
-      })
-      .catch(err => {
-        console.error("Fetch Error:", err.message);
-        document.getElementById("errorMessage").textContent = `Error: ${err.message}`;
-        document.getElementById("errorMessage").classList.remove("hidden");
+
+      } catch (err) {
+        console.error("Error:", err.message);
+        const errorDiv = document.getElementById("errorMessage");
+        errorDiv.textContent = `⚠️ ${err.message}`;
+        errorDiv.classList.remove("hidden");
+
         setTimeout(() => {
-          alert("Failed to load student data or results.");
           window.location.href = "index.html";
-        }, 2000);
-      });
+        }, 3000);
+      }
+    }
+
+    fetchStudentData();
   </script>
 </body>
 </html>
