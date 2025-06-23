@@ -1,6 +1,6 @@
 [
   {
-    "admNumber": "ADM12345",
+    "admNumber": "NC/2023-2552",
     "course": "Diploma in Human Resource Management",
     "module1": {
       "mean": 75.2,
@@ -19,7 +19,7 @@
     }
   },
   {
-    "admNumber": "NC/2022-24522",
+    "admNumber": "NC/2022-2452",
     "course": "Diploma in Business Management",
     "module1": {
       "mean": 63.27,
