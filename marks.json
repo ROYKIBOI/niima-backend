@@ -1,5 +1,24 @@
 [
   {
+    "admNumber": "ADM12345",
+    "course": "Diploma in Human Resource Management",
+    "module1": {
+      "mean": 75.2,
+      "grade": "DISTINCTION",
+      "subjects": [
+        { "title": "Business Mathematics", "marks": 85, "grade": "Distinction" },
+        { "title": "Introduction to ICT", "marks": 72, "grade": "Credit" }
+      ]
+    },
+    "module2": {
+      "mean": 69.8,
+      "grade": "CREDIT",
+      "subjects": [
+        { "title": "Financial Accounting", "marks": 67, "grade": "Credit" }
+      ]
+    }
+  },
+  {
     "admNumber": "NC/2022-2452",
     "course": "Diploma in Business Management",
     "module1": {
