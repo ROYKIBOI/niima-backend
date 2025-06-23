@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Examination Results</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 min-h-screen p-4">
+  <nav class="bg-white shadow p-4 flex justify-between items-center">
+    <h1 class="text-xl font-bold text-blue-600">Student Portal</h1>
+    <button onclick="logout()" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Logout</button>
+  </nav>
+
+  <main class="max-w-5xl mx-auto mt-6">
+    <h2 class="text-2xl font-semibold mb-4">Examination Results</h2>
+    <div id="studentDetails" class="mb-4"></div>
+    <div id="modules"></div>
+    <div id="errorMessage" class="text-red-500 mt-4 text-center hidden"></div>
+  </main>
+
+  <script>
+    const admNumber = localStorage.getItem("admNumber");
+    const token = localStorage.getItem("token");
+
+    if (!admNumber || !token) {
+      window.location.href = "index.html";
+    }
+
+    function logout() {
+      localStorage.removeItem("token");
+      localStorage.removeItem("admNumber");
+      window.location.href = "index.html";
+    }
+
+    async function fetchResults() {
+      try {
+        const res = await fetch(`https://niima-backend.onrender.com/api/user/${encodeURIComponent(admNumber)}`, {
+          method: "GET",
+          headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json"
+          }
+        });
+
+        if (!res.ok) {
+          throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+        }
+
+        const data = await res.json();
+        document.getElementById("studentDetails").innerHTML = `
+          <p><strong>Name:</strong> ${data.name}</p>
+          <p><strong>ADM Number:</strong> ${data.admNumber}</p>
+          <p><strong>Course:</strong> ${data.course || "Not Available"}</p>
+        `;
+
+        const container = document.getElementById("modules");
+        const allModules = [];
+
+        if (data.module1) allModules.push({ ...data.module1, number: 1 });
+        if (data.module2) allModules.push({ ...data.module2, number: 2 });
+        if (data.module3) allModules.push({ ...data.module3, number: 3 });
+
+        if (allModules.length === 0) {
+          container.innerHTML = `
+            <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded">
+              No results found.
+            </div>`;
+        } else {
+          container.innerHTML = allModules.map(unit => `
+            <div class="bg-white shadow-md rounded-lg p-5 mb-6">
+              <h3 class="text-xl font-semibold mb-3">Module ${unit.number}</h3>
+              <p class="mb-2">Mean Score: <strong>${unit.mean}</strong></p>
+              <p class="mb-4">Overall Grade: <strong>${unit.grade}</strong></p>
+              <table class="w-full text-left border">
+                <thead>
+                  <tr class="bg-gray-200">
+                    <th class="py-2 px-3 border">Subject</th>
+                    <th class="py-2 px-3 border">Marks</th>
+                    <th class="py-2 px-3 border">Grade</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${unit.subjects.map(sub => `
+                    <tr>
+                      <td class="py-2 px-3 border">${sub.title}</td>
+                      <td class="py-2 px-3 border">${sub.marks}</td>
+                      <td class="py-2 px-3 border">${sub.grade}</td>
+                    </tr>
+                  `).join("")}
+                </tbody>
+              </table>
+            </div>
+          `).join("");
+        }
+
+      } catch (err) {
+        const errorDiv = document.getElementById("errorMessage");
+        errorDiv.textContent = `Error: ${err.message}`;
+        errorDiv.classList.remove("hidden");
+
+        setTimeout(() => {
+          window.location.href = "index.html";
+        }, 3000);
+      }
+    }
+
+    fetchResults();
+  </script>
+</body>
+</html>
